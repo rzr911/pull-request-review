@@ -31,6 +31,9 @@ type Request struct {
 	PullRequest struct {
 		State string `json:"state"`
 		Title string `json:"title"`
+		Author struct {
+			Name string `json:"display_name"`
+		} `json:"author"`
 	} `json:"pullrequest"`
 	
 }
@@ -57,13 +60,15 @@ func Handler(request events.APIGatewayProxyRequest) (Response, error) {
 	url.WriteString("https://docs.google.com/forms/d/e/1FAIpQLScThanFbQQ-uKYTzzXFnxyF8p30kcqlTSXekFCeGsmMDsdMtw/viewform?usp=pp_url")
 	project := strings.Replace(data.Repository.Project.Name, " ", "%20", -1)
 	repository := strings.Replace(data.Repository.Name," ","%20", -1)
-	actorName := strings.Replace(data.Actor.Name, " ", "%20", -1)
+	actorName := strings.Replace(data.PullRequest.Author.Name, " ", "%20", -1)
 	title := strings.Replace(data.PullRequest.Title, " ", "%20", -1)
-
+	reviewerName := strings.Replace(data.Actor.Name," ", "%20", -1)
 	url.WriteString("&entry.375868032=")
 	url.WriteString(project)
 	url.WriteString("&entry.1818420032=")
 	url.WriteString(repository)
+	url.WriteString("&entry.1402257203=")
+	url.WriteString(reviewerName)
 	url.WriteString("&entry.497941682=")
 	url.WriteString(actorName)
 	url.WriteString("&entry.1697493684=")
